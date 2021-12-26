@@ -13,6 +13,8 @@ var containerEl = document.querySelector("#container")
 var questionId = 0;
 var counter = 30;
 
+var savedScore = [];
+
 
 var questions = [
     {
@@ -59,7 +61,7 @@ var questions = [
 
 
 var startQuiz = function () {
-
+    // starts countdown function
     var countdown = function () {
         counter--;
         timerEl.textContent = counter;
@@ -69,6 +71,7 @@ var startQuiz = function () {
             timerEl.textContent = 0;
             console.log("Game Ended");
             clearMain();
+            endQuiz();
         }
         else if (questionId >= questions.length) {
             clearInterval(startTimer);
@@ -77,18 +80,23 @@ var startQuiz = function () {
             console.log("your score is");
             console.log(score);
             clearMain();
+            endQuiz();
         };
 
     }
     var startTimer = setInterval(countdown, 500);
+
+    // starts quiz 
     questionHolder();
 
 }
+
+// creates questions and answers on main in HTML 
 var questionHolder = function () {
     var i = questionId;
 
     clearMain();
-
+    console.log("this question" + questionId)
 
     var questionContainerEl = document.createElement("div");
     questionContainerEl.className = "question-holder";
@@ -129,11 +137,12 @@ var questionHolder = function () {
     questionDivEl.addEventListener("click", answerSelected);
 
 }
-
+// clear main content
 var clearMain = function () {
     containerEl.innerHTML = "";
 }
 
+// compares answer selected with correct answer
 var answerSelected = function (event) {
     var targetEl = event.target;
     targetAttribute = targetEl.getAttribute("value");
@@ -144,15 +153,95 @@ var answerSelected = function (event) {
         console.log(targetAttribute);
         console.log();
         questionId = questionId + 1;
+        console.log(questionId);
     }
     else {
         console.log("wrong Answer");
+        // deducts seconds from score
         counter = counter - 10;
         questionId = questionId + 1;
+        console.log(questionId)
     }
+    // if there are more questions it will go to the next question
+    if (questionId < questions.length) {
+        questionHolder();
+    }
+}
+
+var endQuiz = function () {
+    loadScore();
+    var score = timerEl.textContent;
+    var resultContainerEl = document.createElement("div");
+    var resultEl = document.createElement("h2");
+    var scoreTextEl = document.createElement("p")
+
+    resultContainerEl.appendChild(resultEl);
+    resultContainerEl.appendChild(scoreTextEl);
+
+    if (score === "0") {
+        resultEl.textContent = "Unfortunately you ran out of time";
+    }
+    else {
+        resultEl.textContent = "Congrats on finishing the quiz";
+        scoreTextEl.textContent = "Your final score is: " + score;
+
+        var initalForm = document.createElement("form")
+        var inputLabel = document.createElement("label");
+        inputLabel.for = "scoreInput";
+        inputLabel.textContent = "Enter your intials: ";
+
+        var initalInput = document.createElement("input");
+        initalInput.type = "text";
+        initalInput.id = "submitText";
+        initalInput.name = "scoreInput";
+
+        var initalButtonEl = document.createElement("button");
+        initalButtonEl.textContent = "Submit";
+        initalButtonEl.className = "btn";
+        initalButtonEl.id = "submitBtn";
+
+        initalForm.appendChild(inputLabel);
+        initalForm.appendChild(initalInput);
+        initalForm.appendChild(initalButtonEl);
+        resultContainerEl.appendChild(initalForm);
+    }
+
+    resultContainerEl.addEventListener("submit", scoreFormHandler);
+    containerEl.appendChild(resultContainerEl);
+
+
+
+}
+var scoreFormHandler = function (event) {
+    // event.preventDefault();
+    console.log("success");
+    score = timerEl.textContent;
+
+    event.preventDefault();
+    var scoreNameInput = document.querySelector("input[name='scoreInput']").value;
+    var scoreObj = {
+        initals: scoreNameInput,
+        score: score
+    }
+    savedScore.push(scoreObj);
+    saveScore();
+
 
 }
 
+var saveScore = function () {
+    localStorage.setItem("quizScore", JSON.stringify(savedScore));
+}
+var loadScore = function () {
+    var highScores = localStorage.getItem("quizScore")
+    if (!highScores) {
+        return false;
+    }
+    highScores = JSON.parse(highScores);
+    console.log(highScores);
+    savedScore.push(highScores);
+}
 
+// event listener on start button quiz
 startButtonEl.addEventListener("click", startQuiz);
 
