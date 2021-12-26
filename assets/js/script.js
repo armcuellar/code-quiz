@@ -11,6 +11,7 @@ var startButtonEl = document.querySelector("#start-quiz");
 var timerEl = document.querySelector("#timer");
 var containerEl = document.querySelector("#container")
 var questionId = 0;
+var counter = 30;
 
 
 var questions = [
@@ -59,29 +60,28 @@ var questions = [
 
 var startQuiz = function () {
 
-    // counter is how much seconds it will take to complete questions
-    var counter = 30;
-    // this is the countdown function for timer
     var countdown = function () {
         counter--;
         timerEl.textContent = counter;
-        if (counter === 0) {
+        if (counter <= 0) {
             console.log("ran out of time")
-            clearInterval(startTimer)
+            clearInterval(startTimer);
+            timerEl.textContent = 0;
+            console.log("Game Ended");
+            clearMain();
+        }
+        else if (questionId >= questions.length) {
+            clearInterval(startTimer);
+            var score = timerEl.textContent;
+            console.log("Game Ended");
+            console.log("your score is");
+            console.log(score);
+            clearMain();
         };
 
     }
-
     var startTimer = setInterval(countdown, 500);
-
-    var i = 0;
-    // while (i < questions.length) {
-
-    // questionHolder();
-    //     i = nextQuestion;
-    //     console.log(nextQuestion)
     questionHolder();
-    // }
 
 }
 var questionHolder = function () {
@@ -99,35 +99,34 @@ var questionHolder = function () {
 
     var choiceA = document.createElement("button");
     choiceA.textContent = questions[i].choiceA;
-    // choiceA.setAttribute("value", "choiceA")
+    choiceA.setAttribute("value", "choiceA");
+    choiceA.className = "btn";
     questionContainerEl.appendChild(choiceA);
 
     var choiceB = document.createElement("button");
     choiceB.textContent = questions[i].choiceB;
-    // choiceB.setAttribute("value", "choiceB")
+    choiceB.setAttribute("value", "choiceB");
+    choiceB.className = "btn";
     questionContainerEl.appendChild(choiceB);
 
     var choiceC = document.createElement("button");
     choiceC.textContent = questions[i].choiceC;
+    choiceC.setAttribute("value", "choiceC");
+    choiceC.className = "btn";
     questionContainerEl.appendChild(choiceC);
 
     var choiceD = document.createElement("button");
     choiceD.textContent = questions[i].choiceD;
+    choiceD.setAttribute("value", "choiceD");
+    choiceD.className = "btn";
     questionContainerEl.appendChild(choiceD);
 
     containerEl.appendChild(questionContainerEl);
 
-    questionId = i + 1;
 
-    // console.log(choiceA.value);
+    var questionDivEl = document.querySelector(".question-holder");
 
-    console.log(questions[i].correctAnswer);
-
-    var questionDivEl = document.querySelector(".question-holder")
-
-    questionDivEl.addEventListener("click", questionHolder);
-
-    // choiceA.addEventListener("click", questionHolder());
+    questionDivEl.addEventListener("click", answerSelected);
 
 }
 
@@ -135,5 +134,25 @@ var clearMain = function () {
     containerEl.innerHTML = "";
 }
 
+var answerSelected = function (event) {
+    var targetEl = event.target;
+    targetAttribute = targetEl.getAttribute("value");
+
+
+    if (targetAttribute === questions[questionId].correctAnswer) {
+        console.log("you clicked correct answer:");
+        console.log(targetAttribute);
+        console.log();
+        questionId = questionId + 1;
+    }
+    else {
+        console.log("wrong Answer");
+        counter = counter - 10;
+        questionId = questionId + 1;
+    }
+
+}
+
+
 startButtonEl.addEventListener("click", startQuiz);
-// containerEl.addEventListener("click", questionHolder);
+
