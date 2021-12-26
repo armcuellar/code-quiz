@@ -6,11 +6,16 @@
 // after initals submitted go to high score page
 // save initals and high score
 // when timer hits 0 or all questions answered end quiz
+// add style
 var startButtonEl = document.querySelector("#start-quiz");
 var timerEl = document.querySelector("#timer");
+var containerEl = document.querySelector("#container")
+var questionId = 0;
+
+
 var questions = [
     {
-        question: "something",
+        question: "question 1",
         choiceA: "A",
         choiceB: "B",
         choiceC: "C",
@@ -18,7 +23,7 @@ var questions = [
         correctAnswer: "choiceB"
     },
     {
-        question: "something",
+        question: "question 2",
         choiceA: "A",
         choiceB: "B",
         choiceC: "C",
@@ -26,7 +31,7 @@ var questions = [
         correctAnswer: "choiceA"
     },
     {
-        question: "something",
+        question: "question 3",
         choiceA: "A",
         choiceB: "B",
         choiceC: "C",
@@ -34,7 +39,7 @@ var questions = [
         correctAnswer: "choiceC"
     },
     {
-        question: "something",
+        question: "questin 4",
         choiceA: "A",
         choiceB: "B",
         choiceC: "C",
@@ -42,7 +47,7 @@ var questions = [
         correctAnswer: "choiceD"
     },
     {
-        question: "something",
+        question: "question 5",
         choiceA: "A",
         choiceB: "B",
         choiceC: "C",
@@ -66,7 +71,69 @@ var startQuiz = function () {
         };
 
     }
+
     var startTimer = setInterval(countdown, 500);
+
+    var i = 0;
+    // while (i < questions.length) {
+
+    // questionHolder();
+    //     i = nextQuestion;
+    //     console.log(nextQuestion)
+    questionHolder();
+    // }
+
+}
+var questionHolder = function () {
+    var i = questionId;
+
+    clearMain();
+
+
+    var questionContainerEl = document.createElement("div");
+    questionContainerEl.className = "question-holder";
+
+    var questionEl = document.createElement("h2");
+    questionEl.textContent = questions[i].question;
+    questionContainerEl.appendChild(questionEl);
+
+    var choiceA = document.createElement("button");
+    choiceA.textContent = questions[i].choiceA;
+    // choiceA.setAttribute("value", "choiceA")
+    questionContainerEl.appendChild(choiceA);
+
+    var choiceB = document.createElement("button");
+    choiceB.textContent = questions[i].choiceB;
+    // choiceB.setAttribute("value", "choiceB")
+    questionContainerEl.appendChild(choiceB);
+
+    var choiceC = document.createElement("button");
+    choiceC.textContent = questions[i].choiceC;
+    questionContainerEl.appendChild(choiceC);
+
+    var choiceD = document.createElement("button");
+    choiceD.textContent = questions[i].choiceD;
+    questionContainerEl.appendChild(choiceD);
+
+    containerEl.appendChild(questionContainerEl);
+
+    questionId = i + 1;
+
+    // console.log(choiceA.value);
+
+    console.log(questions[i].correctAnswer);
+
+    var questionDivEl = document.querySelector(".question-holder")
+
+    questionDivEl.addEventListener("click", questionHolder);
+
+    // choiceA.addEventListener("click", questionHolder());
+
 }
 
-startButtonEl.addEventListener("click", startQuiz)
+var clearMain = function () {
+    containerEl.innerHTML = "";
+}
+
+startButtonEl.addEventListener("click", startQuiz);
+// containerEl.addEventListener("click", questionHolder);
