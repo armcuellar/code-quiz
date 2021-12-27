@@ -1,11 +1,3 @@
-// create arrray with questions and answers
-// set timer
-// change main content with the questions
-// once questions anwered move to next question
-// when quiz finished go to score page
-// after initals submitted go to high score page
-// save initals and high score
-// when timer hits 0 or all questions answered end quiz
 // add style
 var startButtonEl = document.querySelector("#start-quiz");
 var timerEl = document.querySelector("#timer");
@@ -16,7 +8,7 @@ var counter = 60;
 
 var savedScore = [];
 
-
+// array that holds the questions and answers
 var questions = [
     {
         question: "question 1",
@@ -60,7 +52,7 @@ var questions = [
     }
 ];
 
-
+// starts the quiz
 var startQuiz = function () {
     // starts countdown function
     var countdown = function () {
@@ -165,7 +157,7 @@ var answerSelected = function (event) {
     containerEl.appendChild(answerTextEl);
 
 }
-
+// runs after the quiz is over
 var endQuiz = function () {
     var score = timerEl.textContent;
     var resultContainerEl = document.createElement("div");
@@ -177,6 +169,14 @@ var endQuiz = function () {
 
     if (score === "0") {
         resultEl.textContent = "Unfortunately you ran out of time";
+
+        var resetButtonEl = document.createElement("button");
+        resetButtonEl.textContent = "Try again";
+        resetButtonEl.className = "btn";
+
+        resultContainerEl.appendChild(resetButtonEl);
+        resetButtonEl.addEventListener("click", restartQuiz);
+
     }
     else {
         resultEl.textContent = "Congrats on finishing the quiz";
@@ -205,10 +205,8 @@ var endQuiz = function () {
 
     resultContainerEl.addEventListener("submit", scoreFormHandler);
     containerEl.appendChild(resultContainerEl);
-
-
-
 }
+// saves score and goes to high score page
 var scoreFormHandler = function (event) {
     event.preventDefault();
     score = timerEl.textContent;
@@ -223,10 +221,11 @@ var scoreFormHandler = function (event) {
     saveScore();
     printScore();
 }
-
+// saves score to local storage
 var saveScore = function () {
     localStorage.setItem("quizScore", JSON.stringify(savedScore));
 }
+// loads any saved score
 var loadScore = function () {
     var highScores = localStorage.getItem("quizScore")
     if (!highScores) {
@@ -238,6 +237,7 @@ var loadScore = function () {
         savedScore.push(highScores[i]);
     }
 }
+// prints high score on screen
 var printScore = function () {
 
     clearMain();
@@ -248,26 +248,47 @@ var printScore = function () {
 
     var highScoreList = document.createElement("ol");
 
+    // loops to print every high score saved
     for (i = 0; i < savedScore.length; i++) {
         var highScoreItem = document.createElement("li");
         highScoreItem.textContent = savedScore[i].initals + " - " + savedScore[i].score;
         highScoreList.appendChild(highScoreItem);
     }
 
-    highScoreContainer.appendChild(highScoreList);
 
+    var resetButtonEl = document.createElement("button");
+    resetButtonEl.textContent = "Try again";
+    resetButtonEl.className = "btn";
+
+    var clearButtonEl = document.createElement("button");
+    clearButtonEl.textContent = "Clear High Score";
+    clearButtonEl.className = "btn";
+
+
+    highScoreContainer.appendChild(highScoreList);
+    highScoreContainer.appendChild(resetButtonEl);
+    highScoreContainer.appendChild(clearButtonEl);
     containerEl.appendChild(highScoreContainer);
 
+    resetButtonEl.addEventListener("click", restartQuiz);
+    clearButtonEl.addEventListener("click", clearScore);
 }
-
+// restarts quiz by refreshing page
 var restartQuiz = function () {
     location.reload();
 }
-
+// view high score from a cllick
 var viewScore = function (event) {
     event.preventDefault();
     printScore();
 }
+// clear local storage
+var clearScore = function () {
+    localStorage.clear("quizScore");
+    window.alert("High Score cleared");
+    restartQuiz();
+}
+
 // event listener on start button quiz
 startButtonEl.addEventListener("click", startQuiz);
 scoreLinkE1.addEventListener("click", viewScore);
