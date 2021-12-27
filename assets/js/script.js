@@ -11,43 +11,43 @@ var savedScore = [];
 // array that holds the questions and answers
 var questions = [
     {
-        question: "question 1",
-        choiceA: "A",
-        choiceB: "B",
-        choiceC: "C",
-        choiceD: "D",
+        question: "What is correct way to write an array?",
+        choiceA: "var numbers= 1=(one) 2=(two) 3=(three)",
+        choiceB: "var numbers= ['one''two''three']",
+        choiceC: "var numbers= 'one''two''three'",
+        choiceD: "var numbers= '1:one''2:two''3:three'",
         correctAnswer: "choiceB"
     },
     {
-        question: "question 2",
-        choiceA: "A",
-        choiceB: "B",
-        choiceC: "C",
-        choiceD: "D",
+        question: "Which operator is used to assign a value to a variable?",
+        choiceA: "=",
+        choiceB: "-",
+        choiceC: "*",
+        choiceD: "+",
         correctAnswer: "choiceA"
     },
     {
-        question: "question 3",
-        choiceA: "A",
-        choiceB: "B",
-        choiceC: "C",
-        choiceD: "D",
+        question: "The condition in an if/else statement is enclosed with ____.",
+        choiceA: "Quotes",
+        choiceB: "Curly Brackets",
+        choiceC: "Parenthesis",
+        choiceD: "Square Brackets",
         correctAnswer: "choiceC"
     },
     {
-        question: "questin 4",
-        choiceA: "A",
-        choiceB: "B",
-        choiceC: "C",
-        choiceD: "D",
+        question: "Arrays in Javascript can be used to store ______.",
+        choiceA: "Numbers and Strings",
+        choiceB: "Other Arrays",
+        choiceC: "Booleans",
+        choiceD: "All of the above",
         correctAnswer: "choiceD"
     },
     {
-        question: "question 5",
-        choiceA: "A",
-        choiceB: "B",
-        choiceC: "C",
-        choiceD: "D",
+        question: "How do you round the number 5.15, to the nearest integer?",
+        choiceA: "round(5.15)",
+        choiceB: "rnd(5.15)",
+        choiceC: "Math.round(5.15)",
+        choiceD: "Math.rnd(5.15)",
         correctAnswer: "choiceC"
     }
 ];
@@ -93,25 +93,25 @@ var questionQuiz = function () {
     var choiceA = document.createElement("button");
     choiceA.textContent = questions[questionId].choiceA;
     choiceA.setAttribute("value", "choiceA");
-    choiceA.className = "btn";
+    choiceA.className = "btn choice";
     questionContainerEl.appendChild(choiceA);
 
     var choiceB = document.createElement("button");
     choiceB.textContent = questions[questionId].choiceB;
     choiceB.setAttribute("value", "choiceB");
-    choiceB.className = "btn";
+    choiceB.className = "btn choice";
     questionContainerEl.appendChild(choiceB);
 
     var choiceC = document.createElement("button");
     choiceC.textContent = questions[questionId].choiceC;
     choiceC.setAttribute("value", "choiceC");
-    choiceC.className = "btn";
+    choiceC.className = "btn choice";
     questionContainerEl.appendChild(choiceC);
 
     var choiceD = document.createElement("button");
     choiceD.textContent = questions[questionId].choiceD;
     choiceD.setAttribute("value", "choiceD");
-    choiceD.className = "btn";
+    choiceD.className = "btn choice";
     questionContainerEl.appendChild(choiceD);
 
     containerEl.appendChild(questionContainerEl);
@@ -168,7 +168,7 @@ var endQuiz = function () {
     resultContainerEl.appendChild(scoreTextEl);
 
     if (score === "0") {
-        resultEl.textContent = "Unfortunately you ran out of time";
+        resultEl.textContent = "You ran out of time!";
 
         var resetButtonEl = document.createElement("button");
         resetButtonEl.textContent = "Try again";
