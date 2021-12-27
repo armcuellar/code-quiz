@@ -10,8 +10,9 @@
 var startButtonEl = document.querySelector("#start-quiz");
 var timerEl = document.querySelector("#timer");
 var containerEl = document.querySelector("#container")
+var scoreLinkE1 = document.querySelector("#viewHighScore")
 var questionId = 0;
-var counter = 30;
+var counter = 60;
 
 var savedScore = [];
 
@@ -75,10 +76,6 @@ var startQuiz = function () {
         }
         else if (questionId >= questions.length) {
             clearInterval(startTimer);
-            var score = timerEl.textContent;
-            console.log("Game Ended");
-            console.log("your score is");
-            console.log(score);
             clearMain();
             endQuiz();
         };
@@ -87,44 +84,40 @@ var startQuiz = function () {
     var startTimer = setInterval(countdown, 500);
 
     // starts quiz 
-    questionHolder();
-
+    questionQuiz();
 }
 
 // creates questions and answers on main in HTML 
-var questionHolder = function () {
-    var i = questionId;
-
+var questionQuiz = function () {
     clearMain();
-    console.log("this question" + questionId)
 
     var questionContainerEl = document.createElement("div");
     questionContainerEl.className = "question-holder";
 
     var questionEl = document.createElement("h2");
-    questionEl.textContent = questions[i].question;
+    questionEl.textContent = questions[questionId].question;
     questionContainerEl.appendChild(questionEl);
 
     var choiceA = document.createElement("button");
-    choiceA.textContent = questions[i].choiceA;
+    choiceA.textContent = questions[questionId].choiceA;
     choiceA.setAttribute("value", "choiceA");
     choiceA.className = "btn";
     questionContainerEl.appendChild(choiceA);
 
     var choiceB = document.createElement("button");
-    choiceB.textContent = questions[i].choiceB;
+    choiceB.textContent = questions[questionId].choiceB;
     choiceB.setAttribute("value", "choiceB");
     choiceB.className = "btn";
     questionContainerEl.appendChild(choiceB);
 
     var choiceC = document.createElement("button");
-    choiceC.textContent = questions[i].choiceC;
+    choiceC.textContent = questions[questionId].choiceC;
     choiceC.setAttribute("value", "choiceC");
     choiceC.className = "btn";
     questionContainerEl.appendChild(choiceC);
 
     var choiceD = document.createElement("button");
-    choiceD.textContent = questions[i].choiceD;
+    choiceD.textContent = questions[questionId].choiceD;
     choiceD.setAttribute("value", "choiceD");
     choiceD.className = "btn";
     questionContainerEl.appendChild(choiceD);
@@ -146,30 +139,34 @@ var clearMain = function () {
 var answerSelected = function (event) {
     var targetEl = event.target;
     targetAttribute = targetEl.getAttribute("value");
+    var lineDivederEl = document.createElement("hr")
+    var answerTextEl = document.createElement("h3")
 
 
     if (targetAttribute === questions[questionId].correctAnswer) {
-        console.log("you clicked correct answer:");
-        console.log(targetAttribute);
-        console.log();
         questionId = questionId + 1;
-        console.log(questionId);
+        answerTextEl.textContent = "Correct!";
     }
     else {
-        console.log("wrong Answer");
         // deducts seconds from score
         counter = counter - 10;
         questionId = questionId + 1;
-        console.log(questionId)
+        answerTextEl.textContent = "Wrong!";
     }
+
     // if there are more questions it will go to the next question
     if (questionId < questions.length) {
-        questionHolder();
+        questionQuiz();
     }
+    else {
+        clearMain();
+    }
+    containerEl.appendChild(lineDivederEl);
+    containerEl.appendChild(answerTextEl);
+
 }
 
 var endQuiz = function () {
-    loadScore();
     var score = timerEl.textContent;
     var resultContainerEl = document.createElement("div");
     var resultEl = document.createElement("h2");
@@ -213,8 +210,7 @@ var endQuiz = function () {
 
 }
 var scoreFormHandler = function (event) {
-    // event.preventDefault();
-    console.log("success");
+    event.preventDefault();
     score = timerEl.textContent;
 
     event.preventDefault();
@@ -225,8 +221,7 @@ var scoreFormHandler = function (event) {
     }
     savedScore.push(scoreObj);
     saveScore();
-
-
+    printScore();
 }
 
 var saveScore = function () {
@@ -238,10 +233,43 @@ var loadScore = function () {
         return false;
     }
     highScores = JSON.parse(highScores);
-    console.log(highScores);
-    savedScore.push(highScores);
+
+    for (i = 0; i < highScores.length; i++) {
+        savedScore.push(highScores[i]);
+    }
+}
+var printScore = function () {
+
+    clearMain();
+    var highScoreContainer = document.createElement("div");
+    var highScoreTitle = document.createElement("h2");
+    highScoreTitle.textContent = "Saved Scores";
+    highScoreContainer.appendChild(highScoreTitle);
+
+    var highScoreList = document.createElement("ol");
+
+    for (i = 0; i < savedScore.length; i++) {
+        var highScoreItem = document.createElement("li");
+        highScoreItem.textContent = savedScore[i].initals + " - " + savedScore[i].score;
+        highScoreList.appendChild(highScoreItem);
+    }
+
+    highScoreContainer.appendChild(highScoreList);
+
+    containerEl.appendChild(highScoreContainer);
+
 }
 
+var restartQuiz = function () {
+    location.reload();
+}
+
+var viewScore = function (event) {
+    event.preventDefault();
+    printScore();
+}
 // event listener on start button quiz
 startButtonEl.addEventListener("click", startQuiz);
+scoreLinkE1.addEventListener("click", viewScore);
 
+loadScore();
